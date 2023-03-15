@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface FilmManager {
     void addFilm(Film film);
+
     void updateFilm(Film film);
+
     List<Film> getListOfFilms();
 }

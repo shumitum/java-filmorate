@@ -14,6 +14,7 @@ import java.util.Map;
 public class UserRepository implements UserManager {
     private final Map<Integer, User> users = new HashMap<>();
     private int userId;
+
     @Override
     public void createUser(User user) {
         user.setId(++userId);

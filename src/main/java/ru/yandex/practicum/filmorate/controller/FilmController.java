@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.service.FilmManager;
 import ru.yandex.practicum.filmorate.service.ValidateService;
 
 import java.util.List;
@@ -15,26 +15,26 @@ import java.util.List;
 @Slf4j
 public class FilmController {
     private final ValidateService validateService;
-    private final FilmRepository filmRepository;
+    private final FilmManager filmManager;
 
     @PostMapping
     public Film addFilm(@RequestBody Film film) {
         validateService.validateFilm(film);
-        filmRepository.addFilm(film);
-        log.info("фильм: {} добавлен", film);
+        filmManager.addFilm(film);
+        log.info("фильм добавлен: {}", film);
         return film;
     }
 
     @PutMapping
     public Film FilmupdateFilm(@RequestBody Film film) {
         validateService.validateFilm(film);
-        filmRepository.updateFilm(film);
-        log.info("фильм: {} обновлён", film);
+        filmManager.updateFilm(film);
+        log.info("фильм обновлён: {}", film);
         return film;
     }
 
     @GetMapping
     public List<Film> getListOfFilms() {
-        return filmRepository.getListOfFilms();
+        return filmManager.getListOfFilms();
     }
 }
