@@ -34,24 +34,6 @@ class ValidateServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionBecauseOfWrongEmail() {
-        user.setEmail("email-test.com");
-        assertThrows(ValidationException.class, () -> validateService.validateUser(user));
-
-        user.setEmail("");
-        assertThrows(ValidationException.class, () -> validateService.validateUser(user));
-    }
-
-    @Test
-    void shouldThrowExceptionBecauseOfWrongLogin() {
-        user.setLogin(null);
-        assertThrows(ValidationException.class, () -> validateService.validateUser(user));
-
-        user.setLogin("Login ");
-        assertThrows(ValidationException.class, () -> validateService.validateUser(user));
-    }
-
-    @Test
     void shouldUseLoginAsUserName() {
         user.setName(null);
         validateService.validateUser(user);
@@ -60,33 +42,8 @@ class ValidateServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionBecauseOfWrongBirthday() {
-        user.setBirthday(LocalDate.now().plusDays(1));
-        assertThrows(ValidationException.class, () -> validateService.validateUser(user));
-    }
-
-    @Test
     void filmValidationShouldNotThrowAnyExceptions() {
         assertDoesNotThrow(() -> validateService.validateFilm(film));
-    }
-
-    @Test
-    void shouldThrowExceptionBecauseOfWrongFilmName() {
-        film.setName(null);
-        assertThrows(ValidationException.class, () -> validateService.validateFilm(film));
-
-        film.setName("");
-        assertThrows(ValidationException.class, () -> validateService.validateFilm(film));
-    }
-
-    @Test
-    void shouldThrowExceptionBecauseOfTooLongDescription() {
-        film.setDescription("В этом описании 201 знак… В этом описании 201 знак… В этом описании 201 знак… " +
-                "В этом описании 201 знак… В этом описании 201 знак… В этом описании 201 знак… " +
-                "В этом описании 201 знак… В этом описании 201");
-
-        assertEquals(201, film.getDescription().length(), "В описании должен быть 201 знак");
-        assertThrows(ValidationException.class, () -> validateService.validateFilm(film));
     }
 
     @Test
@@ -109,15 +66,6 @@ class ValidateServiceTest {
     void shouldNotThrowExceptionsBecauseOfReleaseDate() {
         film.setReleaseDate(LocalDate.of(1895, 12, 28));
         assertDoesNotThrow(() -> validateService.validateFilm(film));
-    }
-
-    @Test
-    void shouldThrowExceptionBecauseOfWrongDuration() {
-        film.setDuration(0);
-        assertThrows(ValidationException.class, () -> validateService.validateFilm(film));
-
-        film.setDuration(-1);
-        assertThrows(ValidationException.class, () -> validateService.validateFilm(film));
     }
 
     @Test

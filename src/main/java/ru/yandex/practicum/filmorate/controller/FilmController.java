@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmManager;
 import ru.yandex.practicum.filmorate.service.ValidateService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,7 +19,7 @@ public class FilmController {
     private final FilmManager filmManager;
 
     @PostMapping
-    public Film addFilm(@RequestBody Film film) {
+    public Film addFilm(@RequestBody @Valid Film film) {
         validateService.validateFilm(film);
         filmManager.addFilm(film);
         log.info("фильм добавлен: {}", film);
@@ -26,7 +27,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film FilmupdateFilm(@RequestBody Film film) {
+    public Film updateFilm(@RequestBody @Valid Film film) {
         validateService.validateFilm(film);
         filmManager.updateFilm(film);
         log.info("фильм обновлён: {}", film);
