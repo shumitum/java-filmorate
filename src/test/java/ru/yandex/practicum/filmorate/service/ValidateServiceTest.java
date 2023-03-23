@@ -18,7 +18,7 @@ class ValidateServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(1, "email@test.com", "Login", "Name", LocalDate.of(2000, 1, 1));
+        user = new User(1, "email@test.com", "Login", "Name", LocalDate.of(2000, 1, 1), null);
         film = new Film(1, "Movie", "This movie is about...", LocalDate.of(2000, 1, 1), 120);
     }
 

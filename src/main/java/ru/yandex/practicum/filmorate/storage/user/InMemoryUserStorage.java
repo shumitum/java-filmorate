@@ -1,9 +1,9 @@
-package ru.yandex.practicum.filmorate.repository;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserManager;
+import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class UserRepository implements UserManager {
+public class InMemoryUserStorage implements UserStorage, UserService {
     private final Map<Integer, User> users = new HashMap<>();
     private int userId;
 
@@ -33,5 +33,30 @@ public class UserRepository implements UserManager {
     @Override
     public List<User> getListOfUsers() {
         return new ArrayList<>(users.values());
+    }
+
+    @Override
+    public User getUserById(int userId) {
+        return null;
+    }
+
+    @Override
+    public void addFriend(int id, int friendId) {
+
+    }
+
+    @Override
+    public void deleteFriend(int id, int friendId) {
+
+    }
+
+    @Override
+    public List<User> getListOfHisHerFriends(int friendId) {
+        return null;
+    }
+
+    @Override
+    public List<User> getMutualFriends() {
+        return null;
     }
 }
