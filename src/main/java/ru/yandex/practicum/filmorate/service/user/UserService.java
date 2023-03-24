@@ -8,13 +8,13 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    User getUserById(int userId);
+    User getUserById(Long userId);
 
-    void addFriend(int id, int friendId);
+    void addFriend(Long id, Long friendId);
 
-    void deleteFriend(int id, int friendId);
+    void deleteFriend(Long id, Long friendId);
 
-    List<User> getListOfHisHerFriends(int friendId);
+    List<User> getListOfHisHerFriends(Long friendId);
 
-    List<User> getMutualFriends();
+    List<User> getMutualFriends(Long userId, Long friendId);
 }

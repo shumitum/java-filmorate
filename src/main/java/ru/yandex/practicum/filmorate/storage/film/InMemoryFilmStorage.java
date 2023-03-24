@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
@@ -27,7 +26,7 @@ public class InMemoryFilmStorage implements FilmStorage, FilmService {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
         } else {
-            throw new NotFoundException("Фильма с указанным ID не существует");
+            throw new NoSuchElementException("Фильма с ID=" + film.getId() + " не существует");
         }
     }
 
@@ -38,21 +37,32 @@ public class InMemoryFilmStorage implements FilmStorage, FilmService {
 
     @Override
     public Film getFilmById(int filmId) {
-        if (films.containsKey(filmId)) {
-            return films.get(filmId);
+        return films.values().stream()
+                .filter(film -> film.getId() == filmId)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Фильма с ID=" + filmId + " не существует"));
+    }
+
+    @Override
+    public void addLike(int filmId, int userId) {
+        if (!films.containsKey(filmId)) {
+            throw new NoSuchElementException("Фильма с ID=" + filmId + " не существует");
         } else {
-            throw new NotFoundException("Фильма с указанным ID не существует");
+            films.get(filmId).getLikedUserIds().add(userId);
+            log.info("Пользователь с ID=" + userId + " поставил лайк фильму с ID=" + filmId);
         }
     }
 
     @Override
-    public void addLike(int filmId, int UserId) {
-        films.get(filmId).getLikedUserIds().add(UserId);
-    }
-
-    @Override
-    public void deleteLike(int filmId, int UserId) {
-        films.get(filmId).getLikedUserIds().remove(UserId);
+    public void deleteLike(int filmId, int userId) {
+        if (!films.containsKey(filmId)) {
+            throw new NoSuchElementException("Фильма с ID=" + filmId + " не существует");
+        } else if (!films.get(filmId).getLikedUserIds().contains(userId)) {
+            throw new NoSuchElementException("Пользователь c ID=" + userId + " не ставил лайк фильму с ID=" + filmId);
+        } else {
+            films.get(filmId).getLikedUserIds().remove(userId);
+            log.info("Пользователь с ID=" + userId + " убрал лайк с фильма с ID=" + filmId);
+        }
     }
 
     @Override
@@ -60,10 +70,10 @@ public class InMemoryFilmStorage implements FilmStorage, FilmService {
         if (!films.isEmpty()) {
             return films.values().stream()
                     .sorted(Comparator.comparingInt(f -> f.getLikedUserIds().size() * -1))
-                    .limit(count) //.limit(count == null ? 10 : count)
+                    .limit(count)
                     .collect(Collectors.toList());
         } else {
-            throw new NotFoundException("Список фильмов пуст");
+            throw new NoSuchElementException("Список фильмов пуст");
         }
     }
 }

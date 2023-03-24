@@ -1,19 +1,17 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage, UserService {
-    private final Map<Integer, User> users = new HashMap<>();
-    private int userId;
+    private final Map<Long, User> users = new HashMap<>();
+    private Long userId = 0L;
 
     @Override
     public void createUser(User user) {
@@ -26,7 +24,7 @@ public class InMemoryUserStorage implements UserStorage, UserService {
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
         } else {
-            throw new ValidationException("Пользователя с указанным ID не существует");
+            throw new NoSuchElementException("Пользователя с ID=" + user.getId() + " не существует");
         }
     }
 
@@ -36,27 +34,70 @@ public class InMemoryUserStorage implements UserStorage, UserService {
     }
 
     @Override
-    public User getUserById(int userId) {
-        return null;
+    public User getUserById(Long userId) {
+        return users.values().stream()
+                .filter(user -> user.getId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Пользователя с ID=" + userId + " не существует"));
     }
 
     @Override
-    public void addFriend(int id, int friendId) {
-
+    public void addFriend(Long userId, Long friendId) {
+        if (!users.containsKey(userId)) {
+            throw new NoSuchElementException("Пользователя с ID=" + userId + " не существует");
+        } else if (!users.containsKey(friendId)) {
+            throw new NoSuchElementException("Пользователя с ID=" + friendId + " не существует");
+        } else {
+            users.get(userId).getFriendIds().add(friendId);
+            users.get(friendId).getFriendIds().add(userId);
+            log.info("Пользователь с ID=" + userId + " добавил в друзья пользователя с ID=" + friendId);
+        }
     }
 
     @Override
-    public void deleteFriend(int id, int friendId) {
-
+    public void deleteFriend(Long userId, Long friendId) {
+        if (!users.containsKey(userId)) {
+            throw new NoSuchElementException("Пользователя с ID=" + userId + " не существует");
+        } else if (!users.containsKey(friendId)) {
+            throw new NoSuchElementException("Пользователя с ID=" + friendId + " не существует");
+        } else {
+            users.get(userId).getFriendIds().remove(friendId);
+            users.get(friendId).getFriendIds().remove(userId);
+            log.info("Пользователь с ID=" + userId + " удалил из друзей пользователя с ID=" + friendId);
+        }
     }
 
     @Override
-    public List<User> getListOfHisHerFriends(int friendId) {
-        return null;
+    public List<User> getListOfHisHerFriends(Long friendId) {
+        List<User> friendList = new LinkedList<>();
+        if (users.containsKey(friendId)) {
+            for (Long id : users.get(friendId).getFriendIds()) {
+                if (users.containsKey((id))) {
+                    friendList.add(users.get(id));
+                }
+            }
+        } else {
+            throw new NoSuchElementException("Пользователя с ID=" + friendId + " не существует");
+        }
+        return friendList;
     }
 
     @Override
-    public List<User> getMutualFriends() {
-        return null;
+    public List<User> getMutualFriends(Long userId, Long otherId) {
+        List<User> friendList = new LinkedList<>();
+        if (!users.containsKey(userId)) {
+            throw new NoSuchElementException("Пользователя с ID=" + userId + " не существует");
+        } else if (!users.containsKey(otherId)) {
+            throw new NoSuchElementException("Пользователя с ID=" + otherId + " не существует");
+        } else {
+            Set<Long> mutualFriendIds = new HashSet<>(users.get(userId).getFriendIds());
+            mutualFriendIds.retainAll(users.get(otherId).getFriendIds());
+            for (Long mutualFriendId : mutualFriendIds) {
+                if (users.containsKey((mutualFriendId))) {
+                    friendList.add(users.get(mutualFriendId));
+                }
+            }
+        }
+        return friendList;
     }
 }

@@ -7,9 +7,9 @@ import java.util.List;
 public interface FilmService {
     Film getFilmById(int filmId);
 
-    void addLike(int filmId, int UserId);
+    void addLike(int filmId, int userId);
 
-    void deleteLike(int filmId, int UserId);
+    void deleteLike(int filmId, int userId);
 
     List<Film> getHighRatedFilms(Integer count);
 }
