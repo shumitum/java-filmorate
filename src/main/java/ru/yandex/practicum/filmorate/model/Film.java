@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class Film {
-    private int id;
+    private Long id;
     @NotBlank(message = "Название фильма не должно быть пустым")
     private String name;
     @Size(max = 200, message = "В названии фильма должны быть не более 200 символов)")
@@ -21,5 +21,10 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
     private int duration;
-    private final Set<Integer> likedUserIds = new HashSet<>();
+    private int rate;
+    private final Set<Long> likedUserIds = new HashSet<>();
+
+    public int getRate() {
+        return likedUserIds.size();
+    }
 }

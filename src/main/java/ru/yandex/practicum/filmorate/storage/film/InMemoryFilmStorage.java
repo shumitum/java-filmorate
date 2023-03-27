@@ -1,19 +1,14 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 
 @Component
-@Slf4j
-public class InMemoryFilmStorage implements FilmStorage, FilmService {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int filmId;
+public class InMemoryFilmStorage implements FilmStorage {
+    private final Map<Long, Film> films = new HashMap<>();
+    private Long filmId = 0L;
 
     @Override
     public void addFilm(Film film) {
@@ -26,7 +21,7 @@ public class InMemoryFilmStorage implements FilmStorage, FilmService {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
         } else {
-            throw new NoSuchElementException("Фильма с ID=" + film.getId() + " не существует");
+            throw new NoSuchElementException("Невозможно обновить. Фильма с ID=" + film.getId() + " не существует");
         }
     }
 
@@ -36,7 +31,7 @@ public class InMemoryFilmStorage implements FilmStorage, FilmService {
     }
 
     @Override
-    public Film getFilmById(int filmId) {
+    public Film getFilmById(Long filmId) {
         return films.values().stream()
                 .filter(film -> film.getId() == filmId)
                 .findFirst()
@@ -44,36 +39,11 @@ public class InMemoryFilmStorage implements FilmStorage, FilmService {
     }
 
     @Override
-    public void addLike(int filmId, int userId) {
-        if (!films.containsKey(filmId)) {
-            throw new NoSuchElementException("Фильма с ID=" + filmId + " не существует");
+    public void deleteFilmById(Long filmId) {
+        if (films.containsKey(filmId)) {
+            films.remove(filmId);
         } else {
-            films.get(filmId).getLikedUserIds().add(userId);
-            log.info("Пользователь с ID=" + userId + " поставил лайк фильму с ID=" + filmId);
-        }
-    }
-
-    @Override
-    public void deleteLike(int filmId, int userId) {
-        if (!films.containsKey(filmId)) {
-            throw new NoSuchElementException("Фильма с ID=" + filmId + " не существует");
-        } else if (!films.get(filmId).getLikedUserIds().contains(userId)) {
-            throw new NoSuchElementException("Пользователь c ID=" + userId + " не ставил лайк фильму с ID=" + filmId);
-        } else {
-            films.get(filmId).getLikedUserIds().remove(userId);
-            log.info("Пользователь с ID=" + userId + " убрал лайк с фильма с ID=" + filmId);
-        }
-    }
-
-    @Override
-    public List<Film> getHighRatedFilms(Integer count) {
-        if (!films.isEmpty()) {
-            return films.values().stream()
-                    .sorted(Comparator.comparingInt(f -> f.getLikedUserIds().size() * -1))
-                    .limit(count)
-                    .collect(Collectors.toList());
-        } else {
-            throw new NoSuchElementException("Список фильмов пуст");
+            throw new NoSuchElementException("Невозможно удалить. Фильма с ID=" + filmId + " не существует");
         }
     }
 }

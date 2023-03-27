@@ -20,8 +20,7 @@ public class ValidateService {
 
     public void validateFilm(Film film) {
         if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.warn("Некорректна дата релиза фильма: {}", film);
-            throw new ValidationException("Некорректно заполнено поле Дата релиза (не раньше 28 декабря 1895 года)");
+            throw new ValidationException("Некорректно заполнено поле Дата релиза фильма " + film + " (не раньше 28 декабря 1895 года)");
         }
     }
 }
