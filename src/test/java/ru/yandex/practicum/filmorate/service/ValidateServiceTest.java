@@ -47,7 +47,7 @@ class ValidateServiceTest {
     }
 
     @Test
-    void ShouldNotThrowExceptionsBecauseOfDescription() {
+    void shouldNotThrowExceptionsBecauseOfDescription() {
         film.setDescription("В этом описании ровно 200 знаков. В этом описании ровно 200 знаков. " +
                 "В этом описании ровно 200 знаков. В этом описании ровно 200 знаков " +
                 "В этом описании ровно 200 знаков В этом описании ровно 200 знаков");
