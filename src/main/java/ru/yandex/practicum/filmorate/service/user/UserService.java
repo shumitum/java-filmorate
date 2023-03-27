@@ -42,9 +42,9 @@ public class UserService {
     }
 
     public void deleteFriend(Long userId, Long friendId) {
-        User Friend = userStorage.getUserById(friendId);
+        User friend = userStorage.getUserById(friendId);
         userStorage.getUserById(userId).getFriendIds().remove(friendId);
-        Friend.getFriendIds().remove(userId);
+        friend.getFriendIds().remove(userId);
     }
 
     public List<User> getListOfHisHerFriends(Long userId) {
