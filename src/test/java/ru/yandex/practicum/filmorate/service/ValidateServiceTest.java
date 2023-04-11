@@ -18,8 +18,8 @@ class ValidateServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(1, "email@test.com", "Login", "Name", LocalDate.of(2000, 1, 1));
-        film = new Film(1, "Movie", "This movie is about...", LocalDate.of(2000, 1, 1), 120);
+        user = new User(1L, "email@test.com", "Login", "Name", LocalDate.of(2000, 1, 1));
+        film = new Film(1L, "Movie", "This movie is about...", LocalDate.of(2000, 1, 1), 120, 0);
     }
 
     @AfterEach
@@ -47,7 +47,7 @@ class ValidateServiceTest {
     }
 
     @Test
-    void ShouldNotThrowExceptionsBecauseOfDescription() {
+    void shouldNotThrowExceptionsBecauseOfDescription() {
         film.setDescription("В этом описании ровно 200 знаков. В этом описании ровно 200 знаков. " +
                 "В этом описании ровно 200 знаков. В этом описании ровно 200 знаков " +
                 "В этом описании ровно 200 знаков В этом описании ровно 200 знаков");

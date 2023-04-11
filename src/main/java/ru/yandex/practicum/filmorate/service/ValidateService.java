@@ -1,14 +1,14 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
-@Component
+@Service
 @Slf4j
 public class ValidateService {
     public void validateUser(User user) {
@@ -20,8 +20,7 @@ public class ValidateService {
 
     public void validateFilm(Film film) {
         if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.warn("Некорректна дата релиза фильма: {}", film);
-            throw new ValidationException("Некорректно заполнено поле Дата релиза (не раньше 28 декабря 1895 года)");
+            throw new ValidationException("Некорректно заполнено поле Дата релиза фильма " + film + " (не раньше 28 декабря 1895 года)");
         }
     }
 }
