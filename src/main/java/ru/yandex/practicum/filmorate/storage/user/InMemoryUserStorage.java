@@ -46,4 +46,19 @@ public class InMemoryUserStorage implements UserStorage {
             throw new NoSuchElementException("Невозможно удалить. Пользователя с ID=" + userId + " не существует");
         }
     }
+
+    @Override
+    public void addFriend(Long userId, Long friendId) {
+        getUserById(userId).getFriendIds().add(friendId);
+    }
+
+    @Override
+    public void deleteFriend(Long userId, Long friendId) {
+        getUserById(userId).getFriendIds().remove(friendId);
+    }
+
+    @Override
+    public List<Long> getListOfUserFriendsIds(Long userId) {
+        return new ArrayList<>(getUserById(userId).getFriendIds());
+    }
 }

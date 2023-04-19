@@ -23,7 +23,7 @@ public class FilmController {
         validateService.validateFilm(film);
         filmService.addFilm(film);
         log.info("фильм добавлен: {}", film);
-        return film;
+        return filmService.getFilmById(film.getId());
     }
 
     @PutMapping
@@ -31,7 +31,7 @@ public class FilmController {
         validateService.validateFilm(film);
         filmService.updateFilm(film);
         log.info("фильм обновлён: {}", film);
-        return film;
+        return filmService.getFilmById(film.getId());
     }
 
     @GetMapping

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -31,6 +32,15 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
+    public List<Film> getListOfHighRatedFilms(int count) {
+        return getListOfFilms().stream()
+                .sorted(Comparator.comparingInt(f -> f.getRate() * -1))
+                .limit(count)
+                .collect(Collectors.toList());
+        //throw new UnsupportedOperationException("метод необходим только для работы с БД");
+    }
+
+    @Override
     public Film getFilmById(Long filmId) {
         return films.values().stream()
                 .filter(film -> film.getId() == filmId)
@@ -45,5 +55,15 @@ public class InMemoryFilmStorage implements FilmStorage {
         } else {
             throw new NoSuchElementException("Невозможно удалить. Фильма с ID=" + filmId + " не существует");
         }
+    }
+
+    @Override
+    public void addLike(Long filmId, Long userId) {
+        getFilmById(filmId).getLikedUserIds().add(userId);
+    }
+
+    @Override
+    public void deleteLike(Long filmId, Long userId) {
+        getFilmById(filmId).getLikedUserIds().remove(userId);
     }
 }

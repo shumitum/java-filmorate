@@ -16,7 +16,7 @@ public class GenreService {
         return genreStorage.getGenreById(genreId);
     }
 
-    public List<Genre> getListOfMpa() {
+    public List<Genre> getListOfGenres() {
         return genreStorage.getListOfGenres();
     }
 }

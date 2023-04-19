@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,28 +34,51 @@ public class UserService {
     }
 
     public void addFriend(Long userId, Long friendId) {
-        User potentialFriend = userStorage.getUserById(friendId);
+/*        User potentialFriend = userStorage.getUserById(friendId);
         userStorage.getUserById(userId).getFriendIds().add(friendId);
-        potentialFriend.getFriendIds().add(userId);
+        potentialFriend.getFriendIds().add(userId);*/
+        userStorage.getUserById(userId);
+        userStorage.getUserById(friendId);
+        userStorage.addFriend(userId, friendId);
     }
 
     public void deleteFriend(Long userId, Long friendId) {
-        User friend = userStorage.getUserById(friendId);
+/*        User friend = userStorage.getUserById(friendId);
         userStorage.getUserById(userId).getFriendIds().remove(friendId);
-        friend.getFriendIds().remove(userId);
+        friend.getFriendIds().remove(userId);*/
+        userStorage.getUserById(userId);
+        userStorage.getUserById(friendId);
+        userStorage.deleteFriend(userId, friendId);
     }
 
-    public List<User> getListOfHisHerFriends(Long userId) {
-        return userStorage.getUserById(userId).getFriendIds().stream()
+    public List<User> getListOfUserFriends(Long userId) {
+        userStorage.getUserById(userId);
+        return userStorage.getListOfUserFriendsIds(userId)
+                .stream()
                 .map(userStorage::getUserById)
                 .collect(Collectors.toList());
+/*        return userStorage.getUserById(userId).getFriendIds().stream()
+                .map(userStorage::getUserById)
+                .collect(Collectors.toList());*/
     }
 
     public List<User> getMutualFriends(Long userId, Long otherId) {
-        Set<Long> mutualFriendIds = new HashSet<>(userStorage.getUserById(userId).getFriendIds());
-        mutualFriendIds.retainAll(userStorage.getUserById(otherId).getFriendIds());
+        List<Long> mutualFriendIds = userStorage.getListOfUserFriendsIds(userId);
+        mutualFriendIds.retainAll(userStorage.getListOfUserFriendsIds(otherId));
         return mutualFriendIds.stream()
                 .map(userStorage::getUserById)
                 .collect(Collectors.toList());
+/*        return userStorage.getListOfUserFriendsIds(userId)
+                .stream()
+                .filter(userStorage.getListOfUserFriendsIds(otherId)::contains)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());*/
+
+/*        Set<Long> mutualFriendIds = new HashSet<>(userStorage.getUserById(userId).getFriendIds());
+        mutualFriendIds.retainAll(userStorage.getUserById(otherId).getFriendIds());
+        return mutualFriendIds.stream()
+                .map(userStorage::getUserById)
+                .collect(Collectors.toList());*/
     }
 }
