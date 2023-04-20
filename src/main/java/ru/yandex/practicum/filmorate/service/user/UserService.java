@@ -34,18 +34,12 @@ public class UserService {
     }
 
     public void addFriend(Long userId, Long friendId) {
-/*        User potentialFriend = userStorage.getUserById(friendId);
-        userStorage.getUserById(userId).getFriendIds().add(friendId);
-        potentialFriend.getFriendIds().add(userId);*/
         userStorage.getUserById(userId);
         userStorage.getUserById(friendId);
         userStorage.addFriend(userId, friendId);
     }
 
     public void deleteFriend(Long userId, Long friendId) {
-/*        User friend = userStorage.getUserById(friendId);
-        userStorage.getUserById(userId).getFriendIds().remove(friendId);
-        friend.getFriendIds().remove(userId);*/
         userStorage.getUserById(userId);
         userStorage.getUserById(friendId);
         userStorage.deleteFriend(userId, friendId);
@@ -57,9 +51,6 @@ public class UserService {
                 .stream()
                 .map(userStorage::getUserById)
                 .collect(Collectors.toList());
-/*        return userStorage.getUserById(userId).getFriendIds().stream()
-                .map(userStorage::getUserById)
-                .collect(Collectors.toList());*/
     }
 
     public List<User> getMutualFriends(Long userId, Long otherId) {
@@ -68,17 +59,5 @@ public class UserService {
         return mutualFriendIds.stream()
                 .map(userStorage::getUserById)
                 .collect(Collectors.toList());
-/*        return userStorage.getListOfUserFriendsIds(userId)
-                .stream()
-                .filter(userStorage.getListOfUserFriendsIds(otherId)::contains)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());*/
-
-/*        Set<Long> mutualFriendIds = new HashSet<>(userStorage.getUserById(userId).getFriendIds());
-        mutualFriendIds.retainAll(userStorage.getUserById(otherId).getFriendIds());
-        return mutualFriendIds.stream()
-                .map(userStorage::getUserById)
-                .collect(Collectors.toList());*/
     }
 }

@@ -64,7 +64,7 @@ class ValidateServiceTest {
 
     @Test
     void shouldThrowExceptionBecauseOfWrongReleaseDate() {
-        film.setReleaseDate(Date.valueOf("1895-12-27")/*LocalDate.of(1895, 12, 27)*/);
+        film.setReleaseDate(Date.valueOf("1895-12-27"));
         assertThrows(ValidationException.class, () -> validateService.validateFilm(film));
     }
 

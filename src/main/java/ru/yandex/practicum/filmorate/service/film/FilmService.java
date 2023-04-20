@@ -47,6 +47,6 @@ public class FilmService {
     }
 
     public List<Film> getHighRatedFilms(Integer count) {
-        return  filmStorage.getListOfHighRatedFilms(count);
+        return filmStorage.getListOfHighRatedFilms(count);
     }
 }

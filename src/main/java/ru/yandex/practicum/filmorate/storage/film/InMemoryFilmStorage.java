@@ -37,7 +37,6 @@ public class InMemoryFilmStorage implements FilmStorage {
                 .sorted(Comparator.comparingInt(f -> f.getRate() * -1))
                 .limit(count)
                 .collect(Collectors.toList());
-        //throw new UnsupportedOperationException("метод необходим только для работы с БД");
     }
 
     @Override
