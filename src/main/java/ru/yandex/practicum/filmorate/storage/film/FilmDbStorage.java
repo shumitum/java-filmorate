@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,7 +16,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Repository
-@Primary
 @RequiredArgsConstructor
 @Slf4j
 public class FilmDbStorage implements FilmStorage {
@@ -42,6 +40,7 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         film.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         updateFilmsGenresDb(film);
+        updateFilmRateDb(film.getId());
     }
 
     @Override
@@ -57,13 +56,13 @@ public class FilmDbStorage implements FilmStorage {
                 film.getMpa().getId(),
                 film.getId());
         updateFilmsGenresDb(film);
+        updateFilmRateDb(film.getId());
     }
 
     @Override
     public List<Film> getListOfFilms() {
         List<Film> films = jdbcTemplate.query("SELECT * FROM FILMS JOIN MPA M on FILMS.MPA_ID = M.ID", new FilmMapper());
         films.forEach(this::updateFilmsGenreList);
-        films.forEach(this::updateLikesList);
         return films;
     }
 
@@ -72,7 +71,6 @@ public class FilmDbStorage implements FilmStorage {
         List<Film> films = jdbcTemplate.query("SELECT * FROM FILMS JOIN MPA M on FILMS.MPA_ID = M.ID ORDER BY RATE DESC LIMIT ?",
                 new FilmMapper(), count);
         films.forEach(this::updateFilmsGenreList);
-        films.forEach(this::updateLikesList);
         return films;
     }
 
@@ -84,7 +82,6 @@ public class FilmDbStorage implements FilmStorage {
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("Фильма с ID=" + filmId + " не существует"));
         updateFilmsGenreList(film);
-        updateLikesList(film);
         return film;
     }
 
@@ -120,11 +117,6 @@ public class FilmDbStorage implements FilmStorage {
                 .stream()
                 .map(genreStorage::getGenreById)
                 .forEach(genre -> film.getGenres().add(genre));
-    }
-
-    private void updateLikesList(Film film) {
-        jdbcTemplate.queryForList("SELECT USER_ID FROM LIKES WHERE FILM_ID=?", Long.class, film.getId())
-                .forEach(userId -> film.getLikedUserIds().add(userId));
     }
 
     private void updateFilmRateDb(Long filmId) {

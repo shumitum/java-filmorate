@@ -25,8 +25,10 @@ create table IF NOT EXISTS GENRES
 create table IF NOT EXISTS USERS
 (
 	USER_ID   BIGINT  auto_increment,
-	EMAIL     CHARACTER VARYING     not null,
-	LOGIN     CHARACTER VARYING(20) not null,
+	EMAIL     CHARACTER VARYING     not null
+		unique,
+	LOGIN     CHARACTER VARYING(20) not null
+		unique,
 	USER_NAME CHARACTER VARYING     not null,
 	BIRTHDAY  DATE                  not null,
 	constraint "USERS_pk"

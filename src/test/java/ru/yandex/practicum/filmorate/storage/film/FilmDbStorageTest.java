@@ -113,7 +113,7 @@ class FilmDbStorageTest {
                 "New film about friends",
                 Date.valueOf("1999-04-30"),
                 120,
-                0,
+                5,
                 new Mpa(1L, "G"));
 
         assertDoesNotThrow(() -> filmDbStorage.getFilmById(1L));
@@ -130,7 +130,7 @@ class FilmDbStorageTest {
 
     @Test
     void shouldAddLikeToFilm() {
-        assertEquals(0, filmDbStorage.getFilmById(1L).getRate());
+        assertEquals(5, filmDbStorage.getFilmById(1L).getRate());
         filmDbStorage.addLike(1L, 1L);
 
         assertEquals(1, filmDbStorage.getFilmById(1L).getRate());

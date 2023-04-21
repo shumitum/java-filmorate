@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,7 +15,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Repository
-@Primary
 @RequiredArgsConstructor
 @Slf4j
 public class UserDbStorage implements UserStorage {
@@ -65,6 +63,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void deleteUserById(Long userId) {
+        getUserById(userId);
         jdbcTemplate.update("DELETE FROM USERS WHERE USER_ID=?", userId);
     }
 

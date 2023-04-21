@@ -5,13 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.sql.Date;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -25,12 +23,7 @@ public class Film {
     private Date releaseDate;
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
     private int duration;
-    private int rate;
+    @NotNull private int rate;
     private Mpa mpa;
-    private final Set<Long> likedUserIds = new HashSet<>();
-    private final Set<Genre> genres = new TreeSet<>(Comparator.comparingLong(Genre::getId));
-
-    public int getRate() {
-        return likedUserIds.size();
-    }
+    private final Set<Genre> genres = new LinkedHashSet<>();
 }
