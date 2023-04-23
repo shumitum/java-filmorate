@@ -2,17 +2,17 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private Long id;
     @Email
@@ -24,6 +24,5 @@ public class User {
     private String login;
     private String name;
     @PastOrPresent(message = "День рождения не может быть в будущем")
-    private LocalDate birthday;
-    private final Set<Long> friendIds = new HashSet<>();
+    private Date birthday;
 }

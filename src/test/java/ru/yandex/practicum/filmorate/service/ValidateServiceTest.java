@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,8 +18,14 @@ class ValidateServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(1L, "email@test.com", "Login", "Name", LocalDate.of(2000, 1, 1));
-        film = new Film(1L, "Movie", "This movie is about...", LocalDate.of(2000, 1, 1), 120, 0);
+        user = new User(1L, "email@test.com", "Login", "Name", Date.valueOf("2000-1-1"));
+        film = new Film();
+        film.setId(1L);
+        film.setName("Movie");
+        film.setDescription("This movie is about...");
+        film.setReleaseDate(Date.valueOf("2000-1-1"));
+        film.setDuration(120);
+        film.setRate(0);
     }
 
     @AfterEach
@@ -58,13 +64,13 @@ class ValidateServiceTest {
 
     @Test
     void shouldThrowExceptionBecauseOfWrongReleaseDate() {
-        film.setReleaseDate(LocalDate.of(1895, 12, 27));
+        film.setReleaseDate(Date.valueOf("1895-12-27"));
         assertThrows(ValidationException.class, () -> validateService.validateFilm(film));
     }
 
     @Test
     void shouldNotThrowExceptionsBecauseOfReleaseDate() {
-        film.setReleaseDate(LocalDate.of(1895, 12, 28));
+        film.setReleaseDate(Date.valueOf("1895-12-28"));
         assertDoesNotThrow(() -> validateService.validateFilm(film));
     }
 

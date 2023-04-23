@@ -6,9 +6,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,18 +36,17 @@ public class FilmService {
 
     public void addLike(Long filmId, Long userId) {
         userStorage.getUserById(userId);
-        filmStorage.getFilmById(filmId).getLikedUserIds().add(userId);
+        filmStorage.getFilmById(filmId);
+        filmStorage.addLike(filmId, userId);
     }
 
     public void deleteLike(Long filmId, Long userId) {
         userStorage.getUserById(userId);
-        filmStorage.getFilmById(filmId).getLikedUserIds().remove(userId);
+        filmStorage.getFilmById(filmId);
+        filmStorage.deleteLike(filmId, userId);
     }
 
     public List<Film> getHighRatedFilms(Integer count) {
-        return filmStorage.getListOfFilms().stream()
-                .sorted(Comparator.comparingInt(f -> f.getLikedUserIds().size() * -1))
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getListOfHighRatedFilms(count);
     }
 }
