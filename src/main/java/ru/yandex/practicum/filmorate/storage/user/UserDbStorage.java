@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,7 +15,6 @@ import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
-@Slf4j
 public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -65,20 +63,5 @@ public class UserDbStorage implements UserStorage {
     public void deleteUserById(Long userId) {
         getUserById(userId);
         jdbcTemplate.update("DELETE FROM USERS WHERE USER_ID=?", userId);
-    }
-
-    @Override
-    public void addFriend(Long userId, Long friendId) {
-        jdbcTemplate.update("INSERT INTO FRIENDS (USER_ID, FRIEND_ID) VALUES(?,?)", userId, friendId);
-    }
-
-    @Override
-    public void deleteFriend(Long userId, Long friendId) {
-        jdbcTemplate.update("DELETE FROM FRIENDS WHERE USER_ID=? AND FRIEND_ID=?", userId, friendId);
-    }
-
-    @Override
-    public List<Long> getListOfUserFriendsIds(Long userId) {
-        return jdbcTemplate.queryForList("SELECT FRIEND_ID FROM FRIENDS WHERE USER_ID=?", Long.class, userId);
     }
 }

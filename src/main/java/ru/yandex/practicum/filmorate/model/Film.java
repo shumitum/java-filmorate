@@ -9,7 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.sql.Date;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +24,9 @@ public class Film {
     private Date releaseDate;
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
     private int duration;
-    @NotNull private int rate;
+    private int rate;
+    @NotNull
     private Mpa mpa;
     private final Set<Genre> genres = new LinkedHashSet<>();
+    private final Set<Director> director = new LinkedHashSet<>();
 }

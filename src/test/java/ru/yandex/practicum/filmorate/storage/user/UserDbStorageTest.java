@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.friend.FriendStorage;
 
 
 import java.sql.Date;
@@ -29,7 +30,8 @@ class UserDbStorageTest {
 
     @Autowired
     private final UserStorage userStorage;
-
+    @Autowired
+    private final FriendStorage friendStorage;
     @Autowired
     private final JdbcTemplate jdbcTemplate;
 
@@ -110,7 +112,7 @@ class UserDbStorageTest {
                 Long.class, 1);
         assertEquals(0, numberOfFriends);
 
-        userStorage.addFriend(1L, 2L);
+        friendStorage.addFriend(1L, 2L);
 
         Long updNumberOfFriends = jdbcTemplate.queryForObject("SELECT COUNT(FRIEND_ID) FROM FRIENDS WHERE USER_ID=?",
                 Long.class, 1);
@@ -124,12 +126,12 @@ class UserDbStorageTest {
     @Test
     void shouldDeleteFriendFromDb() {
         userStorage.createUser(user);
-        userStorage.addFriend(1L, 2L);
+        friendStorage.addFriend(1L, 2L);
         Long numberOfFriends = jdbcTemplate.queryForObject("SELECT COUNT(FRIEND_ID) FROM FRIENDS WHERE USER_ID=?",
                 Long.class, 1);
         assertEquals(1, numberOfFriends);
 
-        userStorage.deleteFriend(1L, 2L);
+        friendStorage.deleteFriend(1L, 2L);
 
         Long updNumberOfFriends = jdbcTemplate.queryForObject("SELECT COUNT(FRIEND_ID) FROM FRIENDS WHERE USER_ID=?",
                 Long.class, 1);
@@ -139,9 +141,9 @@ class UserDbStorageTest {
     @Test
     void getListOfUserFriendsIds() {
         userStorage.createUser(user);
-        userStorage.addFriend(1L, 2L);
+        friendStorage.addFriend(1L, 2L);
 
-        assertEquals(1, userStorage.getListOfUserFriendsIds(1L).size());
-        assertEquals(2, userStorage.getListOfUserFriendsIds(1L).get(0));
+        assertEquals(1, friendStorage.getListOfUserFriendsIds(1L).size());
+        assertEquals(2, friendStorage.getListOfUserFriendsIds(1L).get(0));
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.storage.like.FilmLikesStorage;
 
 import java.sql.Date;
 import java.util.NoSuchElementException;
@@ -31,6 +32,9 @@ class FilmDbStorageTest {
 
     @Autowired
     private final FilmStorage filmDbStorage;
+
+    @Autowired
+    private final FilmLikesStorage filmLikesStorage;
 
     @BeforeEach
     void setUp() {
@@ -92,7 +96,7 @@ class FilmDbStorageTest {
     @Test
     void sizeOfListOfHighRatedFilmsShouldBeEqualsTwo() {
         filmDbStorage.addFilm(film);
-        filmDbStorage.addLike(1L, 1L);
+        filmLikesStorage.addLike(1L, 1L);
 
         assertEquals(2, filmDbStorage.getListOfHighRatedFilms(2).size());
         assertEquals(1, filmDbStorage.getListOfHighRatedFilms(2).get(0).getId());
@@ -131,17 +135,17 @@ class FilmDbStorageTest {
     @Test
     void shouldAddLikeToFilm() {
         assertEquals(5, filmDbStorage.getFilmById(1L).getRate());
-        filmDbStorage.addLike(1L, 1L);
+        filmLikesStorage.addLike(1L, 1L);
 
         assertEquals(1, filmDbStorage.getFilmById(1L).getRate());
     }
 
     @Test
     void shouldDeleteLikeFromFilm() {
-        filmDbStorage.addLike(1L, 1L);
+        filmLikesStorage.addLike(1L, 1L);
         assertEquals(1, filmDbStorage.getFilmById(1L).getRate());
 
-        filmDbStorage.deleteLike(1L, 1L);
+        filmLikesStorage.deleteLike(1L, 1L);
         assertEquals(0, filmDbStorage.getFilmById(1L).getRate());
     }
 }
